@@ -45,6 +45,11 @@ def process_log_file(cur, filepath):
 
     for i, row in time_df.iterrows():
         cur.execute(sql.time_table_insert, list(row))
+        
+    cur.execute("SELECT * FROM time_table")
+    data = cur.fetchall()
+    for row in data:
+        print('timestamp', row[0])
 
     # load user table
     user_df = pd.concat([df['userId'],df['firstName'],df['lastName'],df['gender'],df['level']], axis =1)
