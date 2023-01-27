@@ -9,9 +9,13 @@ To successfully run the pipeline, the following steps must be done in order:
 - run create_tables.py . This creates the database on you local machine (be aware you have to set the respective database connection in create_tables() yourself). If you have run the entire program already be aware that this file, will drop all already existing tables and will recreate them.
 - run etl.py this is the data pipeline, which manages data wrangling as well as the insert statements to your locally created database
 This is it! Now you have created your own local database to run your queries on.
+
 ### Database Design
+---
+As stated above the database uses a star schema. This means the "songplay" table is the associated fact table, whereas "user_table", "song_table", "artist_table" and "time_table" , hold all the dimensional values. 
 
 ### Files
+---
 In this project you will find the following files/ folders, here is a quick explanation of them:
 - data folder, here all your data from the Million Song Dataset will be saved to
 - create_tables.py creates the database and the respective tables, all previously created tables and the database are always dropped, when running this file
