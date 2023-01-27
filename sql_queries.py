@@ -8,11 +8,11 @@ time_table_drop = "DROP TABLE IF EXISTS time_table"
 
 # CREATE TABLES
 
-songplay_table_create = ("""CREATE TABLE IF NOT EXISTS songplay (songplay_id int, start_time DATE, user_id int, level varchar \
+songplay_table_create = ("""CREATE TABLE IF NOT EXISTS songplay (songplay_id int, ts time, user_id int, level varchar \
                          , song_id varchar, artist_id varchar, session_id int, location varchar, user_agent varchar);
 """)
 
-user_table_create = ("""CREATE TAble IF NOT EXISTS user_table (user_id int, first_name varchar, last_name varchar,\
+user_table_create = ("""CREATE TABLE IF NOT EXISTS user_table (user_id int, first_name varchar, last_name varchar,\
                      gender varchar, level varchar);
 """)
 
@@ -24,13 +24,14 @@ artist_table_create = ("""CREATE TABLE IF NOT EXISTS artist_table (artist_id var
                        latitude float8, longitude float8);
 """)
 
-time_table_create = ("""CREATE TABLE IF NOT EXISTS time_table (start_time DATE, hour int, day int, week int, month int,\
+
+time_table_create = ("""CREATE TABLE IF NOT EXISTS time_table ( ts time, hour int, day int, week int, month int,\
                      year int, weekday varchar);
 """)
 
 # INSERT RECORDS
 
-songplay_table_insert = ("""INSERT INTO songplay (songplay_id, start_time, user_id, level, song_id,\
+songplay_table_insert = ("""INSERT INTO songplay (songplay_id, ts, user_id, level, song_id,\
                          artist_id, session_id, location, user_agent)\
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s )""")
 
@@ -44,12 +45,12 @@ artist_table_insert = ("""INSERT INTO artist_table (artist_id, name, location, l
                        VALUES (%s,%s, %s, %s, %s)""")
 
 
-time_table_insert = ("""INSERT INTO time_table (start_time, hour, day, week, month, year, weekday)\
+time_table_insert = ("""INSERT INTO time_table (ts, hour, day, week, month, year, weekday)\
                      VALUES(%s, %s, %s, %s, %s, %s, %s)""")
 
 # FIND SONGS
 
-song_select = ("""
+song_select = ("""SELECT song_id, artist_id, duration FROM song_table
 """)
 
 # QUERY LISTS
