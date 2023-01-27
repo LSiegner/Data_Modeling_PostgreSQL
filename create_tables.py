@@ -11,7 +11,7 @@ def create_database():
     conn = psycopg2.connect(database="postgres", user='postgres', password='LeonSiegner', host='127.0.0.1', port= '5432')
     conn.set_session(autocommit=True)
     cur = conn.cursor()
-    #kill all other connections if needed
+    #kill all other connections if needed, was used for debugging the ipynb
     cur.execute("SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity \
                 WHERE pg_stat_activity.datname = 'sparkifydb' AND pid <> pg_backend_pid();")
     # create sparkify database with UTF8 encoding

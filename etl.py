@@ -6,6 +6,10 @@ import sql_queries as sql
 
 
 def process_song_file(cur, filepath):
+    '''
+    Opens the provided .json datafiles from the song folder, wrangles the provided data from the files
+    and inserts them into the tables song_table and artist_table
+    '''
     # open song file
     df = pd.read_json(filepath,lines = True)
     
@@ -18,6 +22,10 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    '''
+    Opens the provided .json datafiles from the log folder, wrangles the provided data 
+    and inserts them to the tables time_table, user_table and songplay
+    '''
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -29,7 +37,7 @@ def process_log_file(cur, filepath):
     
     # insert time data records
     time_data_temp = pd.Series(t)
-    time_data = [time_data_temp.dt.time, time_data_temp.dt.hour,time_data_temp.dt.day, time_data_temp.dt.isocalendar().week,
+    time_data = [t, time_data_temp.dt.hour,time_data_temp.dt.day, time_data_temp.dt.isocalendar().week,
             time_data_temp.dt.month,time_data_temp.dt.year,time_data_temp.dt.weekday]
     column_labels = ('time', 'hour', 'day', 'week', 'month', 'year','weekday' )
     time_df = pd.concat(time_data,axis=1)
@@ -56,14 +64,17 @@ def process_log_file(cur, filepath):
             songid, artistid = results[:2]
         else:
             songid, artistid = None, None
-
         # insert songplay record
-        songplay_data = (index, time_df['time'][index], int(user_df['userId'][index]), user_df['level'][index], songid, artistid, 
+        songplay_data = (time_df['time'][index], int(user_df['userId'][index]), user_df['level'][index], songid, artistid, 
                         int(df['sessionId'][index]), df['location'][index], df['userAgent'][index])
+        
         cur.execute(sql.songplay_table_insert, songplay_data)
 
 
 def process_data(cur, conn, filepath, func):
+    '''
+    Uses the functions process_song_file and process_log_file to move data into the sparikify database
+    '''
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -83,6 +94,11 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    '''
+    Main entry point of the programm. Connects to the local sparkify database after it has been created in create_tables.py.
+    runs the functions process_data, which uses the functions process_song_file and process_log_file to insert data into
+    the database
+    '''
     conn = psycopg2.connect(database="sparkifydb", user='postgres', password='LeonSiegner', host='127.0.0.1', port= '5432')
     cur = conn.cursor()
 
